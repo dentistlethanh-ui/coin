@@ -1,0 +1,29 @@
+name: 15m Crypto Signal
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'   # chạy mỗi 15 phút
+  workflow_dispatch:       # cho phép bạn chạy thủ công
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install python-binance requests
+
+      - name: Run signal bot
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID:        ${{ secrets.CHAT_ID }}
+        run: python signal_bot.py
